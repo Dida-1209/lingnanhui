@@ -1,0 +1,27 @@
+ps aux|grep 'gunicorn -k gevent -w 5 -b 127.0.0.1:9100'|grep -v grep|awk -F ' ' '{print $2}'|xargs kill
+
+sleep 5
+
+cd /var/www/community_name_card/
+source env/bin/activate
+celery multi stop -A index.celery_obj worker --loglevel=info
+deactivate
+
+cd /tmp
+
+rm -Rvf /var/www/community_name_card
+
+unzip community_name_card.zip
+mv -v community_name_card /var/www/
+
+cd /var/www/republic/card/
+cp -Rv env /var/www/community_name_card/
+rm -vf /var/www/community_name_card/config/db_config.py
+cp -v db_config.py /var/www/community_name_card/config/
+rm -vf /var/www/community_name_card/config/other_config.py
+cp -v other_config.py /var/www/community_name_card/config/
+
+cd /var/www/community_name_card/
+source env/bin/activate
+celery multi start -A index.celery_obj worker --loglevel=info
+(gunicorn -k gevent -w 5 -b 127.0.0.1:9100 index:app &)

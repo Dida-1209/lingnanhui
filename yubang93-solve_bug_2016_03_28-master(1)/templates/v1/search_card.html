@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+  <title>名片列表</title>
+  <link rel="stylesheet" href="/static/mui/css/mui.min.css" />
+  <link rel="stylesheet" type="text/css" href="/static/v1/css/demo.css?v1=2" />
+  <link rel="stylesheet" href="/static/v1/font-awesome/css/font-awesome.min.css" />
+  <style>
+      .search_list_one span{
+            margin-top: 15px;
+            width: 100px;
+          padding-left:5px;
+          padding-right:5px;
+          display: inline-block;
+          text-align:center;
+      }
+      .text_input{
+        width:70% !important;
+      }
+  </style>
+ </head>
+ <body>
+  <div class="header">
+   <span>
+    <form method="get" id="searchform" action="/web/v1/search_card">
+     <fieldset>
+      <input id="s" name="search_key" value="关键词" class="text_input" onblur="if(this.value==''){this.value='关键词';}" onfocus="if(this.value =='关键词') {this.value=''; }" type="text" />
+      <input id="submit" value="" type="submit" />
+     </fieldset>
+     <input name="industry" type="hidden" />
+     <input name="role" type="hidden" />
+    </form> </span>
+   <span>
+    <section class="job-module">
+     <dl class="retrie">
+      <dt>
+       <a id="area" href="javascript:show_or_hide_search_div();" class="">分类筛选 </a>
+      </dt>
+     </dl>
+    </section> </span>
+  </div>
+  <div id="search_card_list" class="text">
+   <div class="title">
+   </div>
+   <!-- 加载提示 -->
+   <div id="loading_div2" style="text-align:center;">
+    <i class="fa fa-spinner fa-spin"></i>
+    <span style="color: orange;font-size:15px;">拼命加载中。。。</span>
+   </div>
+   <!-- 小编推荐 -->
+   <style id="hide_style">
+          a{display:none!important;}
+      </style>
+   <a href="/web/v1/people/{{obj.open_id}}" style="display:block;" v-for="obj in objs" class="card">
+    <div class="thumb">
+     <img own-sign="avatar" src="{{obj.avatar}}" />
+    </div>
+    <div class="information">
+     <span class="name">{{ obj.name }}</span>
+     <span class="info" own-sign="role">{{obj.company}} | {{obj.role}} | {{obj.industry}}</span>
+     <span v-for="tag in obj.resources_key" class="tag" own-sign="tag"> <i class="fa fa-tag"></i>{{tag}} </span>
+    </div> </a>
+  </div>
+  <div id="loading_div" style="text-align:center;display:none;">
+   <i class="fa fa-spinner fa-spin"></i>
+   <span style="color: orange;font-size:15px;">加载中</span>
+  </div>
+  <!-- 搜索框 -->
+  <div id="search_div" style="width: 100%;position: absolute;top: 60px;text-align: center;background-color:#eee;display:none;">
+   <p>选择行业标签</p>
+   <div own-d1="industry" class="search_list_one">
+    <span class="mui-badge mui-badge-primary">全部行业</span>
+    <span v-for="obj in objs" class="mui-badge mui-badge-inverted">{{obj.a}}</span>
+   </div>
+   <br />
+   <p>选择职能标签</p>
+   <div own-d2="zhineng" class="search_list_one" own-d1="全部行业">
+    <span class="mui-badge mui-badge-primary">全部类别</span>
+   </div>
+   <div own-d1="{{obj.a}}" own-d2="zhineng" v-for="obj in objs" class="search_list_one">
+    <span class="mui-badge mui-badge-primary">全部类别</span>
+    <span v-for="d in obj.b" class="mui-badge mui-badge-inverted">{{d}}</span>
+   </div>
+  </div>
+  <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+  <script src="/static/mui/js/mui.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+  <script src="/static/v1/js/loading.js"></script>
+  <script src="/static/v1/js/search_card.js?v=2"></script>
+ </body>
+</html>

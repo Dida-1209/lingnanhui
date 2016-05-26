@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>岭南会名片社区管理系统</title>
+		<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<style>
+    form, .list_div{padding:10px;}
+</style>
+
+    </head>
+    <body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0);"> 岭南会名片社区管理系统 </a>
+        </div>
+
+
+     <ul class="nav navbar-nav">
+        <li class="active"><a href="/admin/v1/cards">小编推荐管理</a></li>
+        <li><a href="/admin/v1/robot_set">微信群自动回复配置</a></li>
+     <li><a href="/admin/v1/group_link_setting">群链接管理</a></li>
+<li><a href="resource_helper_message_ui">资源小助手</a></li>
+     </ul>
+    </div>
+
+</nav>
+
+<form class="form-inline">
+    <div class="form-group">
+        <select id="status" class="form-control" onchange="getMessage(0);">
+            <option value="0">全部</option>
+            <option value="1">最新</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" id="search_nickname" class="form-control" placeholder="请输入昵称">
+    </div>
+    <button onclick="getMessage(1);" type="button" class="btn btn-info">搜索</button>
+</form>
+
+<!-- 名片列表 -->
+<div class="list_div">
+    <table id="table" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>名字</th>
+            <th>公司</th>
+            <th>行业职位</th>
+            <th>资源关键字</th>
+            <td>省</td>
+            <td>城市</td>
+            <th>推荐到小编推荐</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+            <tr v-for="obj in objs">
+                <td>{{obj.name}}</td>
+                <td>{{obj.company}}</td>
+                <td>{{obj.industry}} | {{obj.role}}</td>
+                <td>
+                    {{obj['resources_key']}}
+                </td>
+                <td>{{obj.province}}</td>
+                <td>{{obj.city}}</td>
+                <td>
+                    <template v-if="obj.is_recommend == 1">是</template>
+                    <template v-else>否</template>
+                </td>
+                <td>
+                    <a v-if="obj.is_recommend == 0" href="javascript:recommend_card({{obj.id}},1);">推荐到小编推荐</a>
+                    <a v-else href="javascript:recommend_card({{obj.id}},0);">取消推荐到小编推荐</a>
+                    <a href="javascript:deleteMessage({{obj.id}}, 2);">删除</a>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+
+<div style="display:none;">
+    <table>
+        <tbody id="t">
+        <tr>
+            <td>名字</td>
+            <td>公司</td>
+            <td>行业职位</td>
+            <td>资源关键字</td>
+            <td>推荐到小编推荐</td>
+            <td>
+                <a href="javascript:recommend_card(,1);">推荐到小编推荐</a>
+                <a href="javascript:recommend_card(,0);">取消推荐到小编推荐</a>
+                <a href="javascript:deleteMessage(2);">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+        <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+<script src="/static/js/tools.js"></script>
+<script>
+
+    function getMessage(page){
+        $("#content_table").html("");
+        $.post("/admin/v1/get_cards", {
+            "page": page,
+            "status": $("#status").val(),
+            "search_nickname": $("#search_nickname").val()
+        }, function(data){
+
+            for(var i in data['objs']){
+                data['objs'][i]['resources_key'] = data['objs'][i]['resources_key'].replace(/#/ig," | ");
+            }
+
+            vm.$set('objs', data['objs'])
+
+            var tmp = new TheWheelsOfFrontEnd();
+            html = tmp.getPagingComponent(5, data['max_page'], data['page'], "javascript:getMessage(\{\{i\}\});", "javascript:getMessage(1);", "javascript:getMessage("+data['max_page']+");");
+            $("#page").html(html);
+
+        }).error(function(){
+            alert("服务器发生不可预料的错误，请与开发人员联系！");
+        });
+
+    }
+
+    function deleteMessage(id){
+        $.get('/admin/v1/delete_card/'+id, {}, function(){
+            alert("删除成功！");
+            location.reload();
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+    }
+
+    function recommend_card(id, status){
+        $.get('/admin/v1/recommend_card/' + id + "/" + status, {}, function(data){
+            alert("处理成功！");
+            location.reload();
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+    }
+
+    var vm ;
+    $(document).ready(function(){
+
+        vm = new Vue({
+            el: '#table',
+            data: {
+                objs: []
+            }
+        })
+
+        getMessage(1);
+    });
+
+
+</script>
+
+
+    </body>
+</html>

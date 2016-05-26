@@ -1,0 +1,91 @@
+/*associator person-center 会员个人中心*/
+.person-center{
+	width: 100%;
+	height: 100px;
+	overflow: hidden;
+	    background-color: white;
+}
+.person-picture{
+	    position: relative;
+    display: block;
+    z-index: 9;
+    top: 10px;
+    left: 10px;
+    width: 70px;
+    height: 70px;
+    border: 3px solid #0f88f4;
+    border-radius: 50%;
+}
+.person-name,
+.person-go{
+	position: relative;
+	display: block;
+	height: 2.2rem;
+	line-height: 2.2rem;
+	background-color: rgba(230,230,230,.2);
+	overflow: hidden;
+}
+.person-go > img{
+    display: block;
+    float: left;
+    color: #0F88F4;
+    width: 20px;
+    height: 20px;
+    margin: 5px 5px 5px 5px;
+}
+.person-name{
+	top: -45px;
+    left: 42px;
+    width: 100%;
+    padding-left: 50px;
+    border-top: 0px solid rgba(220,220,220,.2);
+    font-size: 1rem;
+    font-weight: bold;
+}
+.person-go{
+	top: -81px;
+	left: 60%;
+	width: 35%;
+	border: 1.5px solid rgb(220,220,220);
+	-webkit-box-shadow: 3px 3px 3px rgba(204, 204, 204, .5);
+    box-shadow: 3px 3px 3px rgba(204, 204, 204, .5);
+	font-size: 0.9rem;
+	font-weight: bold;
+}
+
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
+	.person-center{
+		height: 20vw;
+	}
+	.person-picture {    margin: 10px 30px;    width: 15.0vw;    height: 15.0vw;}
+	.person-name{
+		top:-10.0vw;
+		padding-left: 18vw;
+	}
+	.person-go{
+		left: 73.105vw;
+	width: 23.05238vw;
+		top:-15.8vw;
+	}
+	.person-go,
+	.person-name{
+		height: 5.8vw;
+		line-height: 5.8vw;
+	}
+	.person-go > img{
+		margin: 1vw 15px;
+		width: 20px;
+		height: 20px;
+	}
+	.person-go{
+		font-size: 1rem;
+	}
+	.mui-icon-forward{
+		font-size: 1.5rem;
+	}
+
+	#search_div{
+		top:28vw !important;
+	}
+}

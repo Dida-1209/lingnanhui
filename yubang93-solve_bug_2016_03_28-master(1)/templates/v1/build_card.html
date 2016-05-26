@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" />
+
+  	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>与创业大咖同行——制作名片</title>
+  <link rel="stylesheet" href="/static/mui/css/mui.min.css" />
+  <link href="/static/v1/css/card.css?v=4" rel="stylesheet" />
+  <link href="/static/v1/css/base.css?v=1" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/v1/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="/static/v1/l_area/LArea.css">
+  <style>
+  </style>
+ </head>
+ <body>
+  <div class="mui-content">
+   <!-- 更换头像逻辑 -->
+   <input id="img_upload" accept="image/*" onchange="upload_file();" style="display:none;" type="file" />
+   <!-- 第一步 -->
+   <div class="warning first_page" style="display:none;">
+    <img src="/static/v1/images/1.png" />
+    <p style="line-height:17px;">
+     <b style="color:#007aff;">只邀请创业大咖的资源社区，</b>请先生成名片，才能进入资源社区寻找资源
+    </p>
+   </div>
+   <div class="card first_page" style="display:none;">
+    <img id="avatar" src="" onclick="click_img();" />
+    <p align="center">
+     <small style="color:red;font-size: 12px !important;">点击头像更换头像</small>
+    </p>
+
+    <div class="new_input">
+     <div class="new_input_div1">姓名</div>
+     <div class="new_input_div2">
+      <input id="name" value="" type="text" placeholder="姓名" />
+     </div>
+     <div class="new_input_div3"></div>
+    </div>
+
+    <div class="new_input">
+     <div class="new_input_div1">公司</div>
+     <div class="new_input_div2">
+     <input id="company" value="" type="text" placeholder="公司" />
+      </div>
+     <div class="new_input_div3"></div>
+    </div>
+
+    <div class="industry">
+     <span>所在行业/职能</span>
+     <img id="i-btn" src="/static/v1/img/tianjia.png" />
+     <p onclick="$('#i-btn').trigger('click');"> <span id="industry" class="tip_span">互联网/软件</span> <span class="tip_span" style="margin: 0 2.21vw;">|</span> <span id="role" class="tip_span">经理</span> </p>
+    </div>
+
+    <div class="new_input">
+     <div class="new_input_div1">邀请码</div>
+     <div class="new_input_div2">
+      <input id="invitation_code"  value="" type="text" placeholder="邀请码" />
+     </div>
+     <div class="new_input_div3"></div>
+      <p>
+       <a style="font-size: 12px !important;" href="/web/v1/customer_code">获取邀请码</a>
+     </p>
+    </div>
+
+    <div class="next" style="padding-top: 5px;">
+     <button class="next-page" onclick="next_page();">下一步</button>
+     <span class="next-triangle"></span>
+     <span class="next-triangle-after"></span>
+    </div>
+    <div id="i-mask" style="display: none;">
+    </div>
+    <div style="height:5px;width:100%;"></div>
+    <!-- 职能选择框 -->
+    <div id="role_div" class="i-menu" style="display:none;">
+     <ul class="select1">
+      <li v-for="obj in objs" class="s1" own-index="{{$index}}" own-sign="hangye" style="border-left: 10px solid rgba(35, 185, 171,0.5); background-color: rgba(179, 173, 173,.3);"><a>{{obj.a}}</a></li>
+     </ul>
+     <ul class="select2">
+      <template v-for="(index,obj) in objs">
+       <li v-for="(i, d) in obj.b" own-index="{{index}}" own-sign="zhiwei" style="display: none; background-color: rgba(179, 173, 173, 0.298039);"><a>{{d}}</a></li>
+      </template>
+     </ul>
+    </div>
+   </div>
+   <!-- 第二步 -->
+   <div class="mui-content two_page">
+    <div class="warning">
+     <img src="/static/v1/images/1.png" />
+     <p style="line-height:17px;">为了其他人能更好的了解你和与你进行对接，请详细的填写你能提供的资源！</p>
+    </div>
+    <div class="card">
+     <div class="keyword">
+      <span class="css1">添加你能提供的资源关键字</span>
+      <input id="input_keyword_type" type="text" />
+      <button id="add" onclick="add_label('input_keyword_type', 'out_keyword');">添加</button>
+     </div>
+     <div id="out_keyword" class="type" style="margin-top:10px;">
+     </div>
+     <hr style="margin-top:15px;">
+     <div class="new_input">
+       <div class="new_input_div1" onclick="$('#province_and_city').trigger('click');">省/城市</div>
+      <div class="new_input_div2">
+       <input id="province_and_city" style="text-overflow:ellipsis;color:#524F4F;" value="" type="text" placeholder="请选择城市" readonly="readonly" />
+    </div>
+      <div class="new_input_div3"></div>
+       <input id="out_province_and_city" type="hidden">
+     </div>
+
+     <div style="margin: 15px 0 0 68%;">
+      <button class="finish" onclick="build_card();">生成名片</button>
+      <span class="next-triangle"></span>
+     </div>
+     <div style="height:1px;width:100%;"></div>
+    </div>
+   </div>
+  </div>
+
+  <!-- 默认显示加载层 -->
+  <div class="loadin_div_first">
+   <div></div>
+   <i class="fa fa-spinner fa-spin" style="color: orange;"></i>
+   <span style="color: orange;font-size:15px;">加载中</span>
+  </div>
+
+  <div id="ttt" style="width:100%;"></div>
+
+  <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+  <script src="/static/mui/js/mui.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+  <script src="/static/v1/js/wap.js?v=1"></script>
+  <script src="/static/v1/l_area/LArea.min.js"></script>
+  <script src="/static/v1/l_area/LAreaData1.js"></script>
+  <script src="/static/v1/js/card.js?v=2&denug=1"></script>
+ <script>
+
+
+ $('input[type="text"]').bind('click',function(e){
+     var $this = $(this);
+     e.preventDefault();
+     setTimeout(function(){
+         $("#ttt").css('height', '300px')
+         $(window).scrollTop($this.offset().top - 30);
+     },200)
+ })
+ </script>
+ </body>
+</html>

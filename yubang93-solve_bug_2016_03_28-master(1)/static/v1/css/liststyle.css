@@ -1,0 +1,49 @@
+body{
+	background: #ecf2f2;
+}
+.tou{
+	color:#3bb4eb;
+	font-size: 1rem;
+	margin: 0.5rem;
+	margin-left: 6%;
+	font-family: "黑体";
+}
+.set1{
+	display: block;
+	margin-top:1px;
+	width: 88%;
+	margin-left: 6%;
+	box-shadow: 0.15rem 0.15rem 0.07rem #b7bbba;
+	background: white;
+}
+.face-f{
+	margin: 0.5rem 1rem 0.5rem 1rem;
+	width: 3rem;
+	height: 3rem;
+	border-radius: 5rem;
+	float: left;
+	overflow: hidden;
+	display: -webkit-box;
+}
+.face{
+	width: 100%;
+	height: auto;
+}
+.xx{
+	font-size: 0.7rem;
+	color: #535552;
+	font-family: "黑体";
+	float: left;
+}
+.name{
+	font-size: 1rem;
+	margin-right: 0.4rem;
+}
+.x1,.x2{
+	margin-top: 0.5rem;
+}
+.job{
+	border-left: 0.12rem solid;
+	margin-left: 0.3rem;
+	padding-left: 0.3rem;
+}

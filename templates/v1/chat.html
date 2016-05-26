@@ -1,0 +1,109 @@
+{% extends "v1/base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block main %}
+
+    <div style="display:none;">
+        <div id="rec" class="i-b-rec-text" style="width: 100%;">
+            <img src=" "><div>
+            <span><em></em></span></div>
+        </div>
+        <div id="sen" class="i-b-sen-text" style="width: 100%;">
+            <img src=" ">
+            <div>
+                <span><em></em></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat_div" class="phone-wrap">
+        <div class="i-b-rec-text" style="width: 100%;">
+        </div>
+    </div>
+    <div class="message_div">
+    <input style="width:80%;margin-left:5px;" id="message" type="text">
+    <div class="send_button">
+        <a href="javascript:send_message();" class="mui-btn mui-btn-success mui-btn-outlined">发送</a>
+    </div>
+    </div>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/chat.css">
+<style>
+    #chat_div{
+        width:205%;
+        margin-top: -20px;
+    }
+    .send_button{
+        float:right;
+        text-align:right;
+        margin-right:5px;
+    }
+    .message_div{
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+{% block js %}
+    <script>
+        mui.init();
+        var index = 0;
+        function addMessage(type_str, message, img, is_append){
+            var clone_dom = document.getElementById(type_str).cloneNode(true);
+            clone_dom.id = type_str + index;
+            clone_dom.children[0].src = img;
+            clone_dom.children[1].children[0].children[0].innerHTML = message;
+            if(is_append){
+                document.getElementById('chat_div').innerHTML = document.getElementById('chat_div').innerHTML + clone_dom.outerHTML;
+            }else{
+                document.getElementById('chat_div').innerHTML = clone_dom.outerHTML +  document.getElementById('chat_div').innerHTML;
+            }
+            index++;
+        }
+
+        mui.ajax('/api/v1/getChat/{{friend_open_id}}/1/500',{
+            dataType:'json',//服务器返回json格式数据
+            success:function(data){
+                for(var i in data){
+                    if(data[i]['from_open_id'] == '{{friend_open_id}}'){
+                        addMessage("rec", data[i]['message_content'], '{{obj['friend_card']['avatar']}}', false);
+                    }else{
+                       addMessage("sen", data[i]['message_content'], '{{obj['own_card']['avatar']}}', false);
+                    }
+                }
+            },
+            error:function(xhr,type,errorThrown){
+                mui.alert("服务器异常！");
+            }
+        });
+
+        function send_message(){
+            if(!document.getElementById('message').value){
+                mui.alert("发送的消息不能为空！");
+                return;
+            }
+            mui.ajax('/api/v1/sendMessage/{{friend_open_id}}',{
+                data:{
+                    message: document.getElementById('message').value
+                },
+                dataType:'json',//服务器返回json格式数据
+                type:'post',//HTTP请求类型
+                success:function(data){
+                    //服务器返回响应，根据响应结果，分析是否登录成功；
+                    if(data['code'] != 0){
+                        mui.alert("发送消息失败！");
+                        return;
+                    }
+                    addMessage("sen", document.getElementById('message').value, "http://avatar.csdn.net/F/1/6/1_redcn2004.jpg", true);
+                    document.getElementById('message').value = "";
+                },
+                error:function(xhr,type,errorThrown){
+                    //异常处理；
+                    console.log(type);
+                }
+            });
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "v1/base.html" %}
+{% block title %}{{card.name}}{% endblock %}
+{% block main %}
+
+
+<div class="info">
+    <img class="code" src="http://qr.liantu.com/api.php?text={{url}}&el=h">
+
+    <p class="name">{{card.name}}</p>
+
+    <p><span class="company">{{card.company}}</span>
+        <span class="line"></span>
+        <span class="job">{{card.role}}</span>
+    </p>
+
+    <p class="industry">{{card.industry}}</p>
+
+    <div id="marks">
+        <span class="tag">标签：</span>
+        {% for obj in card['keys'] %}
+        <span class="bigdata"><img src="/static/v1/images/2.png">{{obj}}</span>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/v1/css/card2.css">
+{% endblock %}

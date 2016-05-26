@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" />
+  <title>岭南会名片社区管理系统</title>
+  <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" />
+  <style>
+            .css1{padding:10px;}
+        </style>
+ </head>
+ <body>
+  <!-- 导航条 -->
+  <nav class="navbar navbar-default nav-justified">
+   <div class="container-fluid">
+    <div class="navbar-header">
+     <a class="navbar-brand" href="javascript:void(0);"> 岭南会名片社区管理系统 </a>
+    </div>
+    <ul class="nav navbar-nav">
+     <li><a href="/admin/v1/cards">小编推荐管理</a></li>
+     <li><a href="/admin/v1/robot_set">微信群自动回复配置</a></li>
+     <li class="active"><a href="/admin/v1/group_link_setting">群链接管理</a></li>
+    <li><a href="resource_helper_message_ui">资源小助手</a></li>
+    </ul>
+   </div>
+  </nav>
+  <div class="css1">
+   <p> <button type="button" class="btn btn-primary" onclick="show_add_div();">添加群链接</button> </p>
+   <!-- 群链接管理 -->
+   <table id="link_tables" class="table table-bordered table-hover">
+    <thead>
+     <tr>
+      <td> 序号 </td>
+      <td> 群昵称 </td>
+      <td> 群凭证 </td>
+      <td> 群链接 </td>
+      <td> 状态 </td>
+      <td> 操作 </td>
+     </tr>
+    </thead>
+       <tbody>
+            <tr v-for="obj in objs">
+              <td> {{ $index + 1 }} </td>
+              <td> {{ obj.group_title }} </td>
+              <td> {{ obj.group_token }} </td>
+              <td> {{url}}{{ obj.group_token }} </td>
+              <td>
+                <template v-if="obj.group_status == 0">
+                    启用
+                </template>
+                <template v-else>禁用</template>
+              </td>
+              <td>
+                <a href="javascript:edit_link_use_index({{$index}})">编辑</a>
+                <a href="javascript:delete_link('{{obj.group_token}}');">删除</a>
+              </td>
+            </tr>
+       </tbody>
+   </table>
+      <div id="page"></div>
+  </div>
+
+  <!-- 添加链接模态窗 -->
+  <div id="add_link_div" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加群链接</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="group_title">群名称</label>
+            <input v-model="group_title" type="text" class="form-control" id="group_title" placeholder="请输入群名称">
+        </div>
+        <div class="form-group">
+            <label for="group_status">状态</label>
+            <select v-model="group_status" class="form-control" id="group_status">
+                <option value="0">启用</option>
+                <option value="1">禁用</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="add_link();">添加</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+  <!-- 修改链接模态窗 -->
+  <div id="edit_link_div" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加群链接</h4>
+      </div>
+      <div class="modal-body">
+          <input type="hidden" v-model="group_token">
+        <div class="form-group">
+            <label for="group_title2">群名称</label>
+            <input v-model="group_title" type="text" class="form-control" id="group_title2" placeholder="请输入群名称">
+        </div>
+        <div class="form-group">
+            <label for="group_status2">状态</label>
+            <select v-model="group_status" class="form-control" id="group_status2">
+                <option value="0">启用</option>
+                <option value="1">禁用</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="edit_link();">修改</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+  <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="/static/js/tools.js"></script>
+  <script>
+
+        var objs = [];
+
+        function show_add_div(){
+            $("#add_link_div").modal();
+        }
+
+        function add_link(){
+            $.post('/admin/v1/add_link', {
+                group_title: vm1.group_title,
+                group_status: vm1.group_status
+            }, function(data){
+                alert('添加成功！')
+                location.reload()
+            }).error(function(){
+                alert('服务器无法响应！')
+            })
+        }
+
+        function get_links(page){
+            $.post('/admin/v1/get_links', {
+                page: page,
+                count: 20
+            }, function(data){
+                objs = data['objs']
+                vm2.$set("objs", data['objs'])
+                vm2.$set("url", data['url'])
+                if(data['total_page'] != 0){
+                var tmp = new TheWheelsOfFrontEnd();
+                html = tmp.getPagingComponent(5, data['total_page'], page, "javascript:get_links(\{\{i\}\});", "javascript:get_links(1);", "javascript:get_links("+data['total_page']+");");
+                $("#page").html(html)
+                }
+            }).error(function(){
+                alert('服务器无法响应！')
+            })
+        }
+
+        function delete_link(token){
+            $.get('/admin/v1/delete_link/'+token, {}, function(data){
+                alert('删除成功！')
+                location.reload()
+            }).error(
+                function(){
+                   alert('服务器无法响应！')
+                }
+            )
+        }
+
+        function edit_link_use_index(index){
+            var obj = objs[index]
+            vm3.$set('group_title', obj['group_title'])
+            vm3.$set('group_status', obj['group_status'])
+            vm3.$set('group_token', obj['group_token'])
+            $("#edit_link_div").modal()
+        }
+
+        function edit_link(){
+            $.post('/admin/v1/edit_link', {
+                group_title: vm3.group_title,
+                group_status: vm3.group_status,
+                group_token: vm3.group_token
+            }, function(data){
+                alert('修改成功！')
+                location.reload()
+            }).error(function(){
+                alert('服务器无法响应！')
+            })
+        }
+
+        var vm1, vm2, vm3;
+
+        $(document).ready(function(){
+
+            vm1 = new Vue({
+                el: '#add_link_div',
+                data: {
+                 group_title: '',
+                 group_status: 0
+                }
+            })
+
+            vm2 = new Vue({
+                el: '#link_tables',
+                data: {
+                    objs: [],
+                    url: ''
+                },
+                compiled: function(){
+                    get_links(1)
+                }
+            })
+
+            vm3 = new Vue({
+                el: '#edit_link_div',
+                data: {
+                    group_title: '',
+                    group_status: 0,
+                    group_token: ''
+                }
+            })
+
+        })
+
+    </script>
+
+ </body>
+</html>

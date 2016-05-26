@@ -1,0 +1,34 @@
+[
+
+    ["/web/v1/to_wechat_link", "/templates/v1/search_card.html"],
+
+    ["/web/v1/buildCard", "/templates/v1/build_card.html"],
+    ["/web/v1/updateCard", "/templates/v1/build_card.html"],
+    ["/web/v1/search_card", "/templates/v1/search_card.html"],
+
+    ["/api/v1/get_own_card_in_make_card", "/src/json/1.json"],
+    ["/api/v1/updateNameCard", "/src/json/2.json"],
+    ["/api/v1/searchNameCard/1/5", "/src/json/3.json"],
+
+
+    ["/api/v1/searchNameCard/1/10", "/src/json/4.json"],
+    ["/web/v1/search_card", "/templates/v1/search_card.html"],
+
+    ["/web/v1/people/frgre", "/templates/v1/people.html"],
+    ["/api/v1/get_card_of_a_prople/frgre", "/src/json/5.json"],
+
+    ["/web/v1/chat/frgre", "/templates/v1/chat.html"],
+    ["/api/v1/getChat/frgre/1/500", "/src/json/6.json"],
+    ["/api/v1/getNewChat/frgre", "/src/json/7.json"],
+    ["/api/v1/sendMessage/frgre", "/src/json/8.json"],
+    ["/api/v1/get_chat_need_message", "/src/json/9.json"],
+
+    ["/web/v1/all_cards/a4ce7698ec377f3f6f44692a0c7ade4a", "/templates/v1/all_cards.html"],
+    ["/api/v1/getNameCard", "/src/json/10.json"],
+    ["/api/v1/get_all_card_in_a_group", "/src/json/11.json"],
+
+    ["/web/v1/contact_list", "/templates/v1/contact_list.html"],
+    ["/api/v1/getNameCard", "/src/json/12.json"],
+    ["/api/v1/get_own_new_message_number", "/src/json/13.json"],
+    ["/api/v1/getContacts", "/src/json/14.json"]
+]

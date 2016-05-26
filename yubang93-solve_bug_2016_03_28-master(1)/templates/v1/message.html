@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <title>我的消息</title>
+    <link rel="stylesheet" href="/static/mui/css/mui.min.css">
+    <link rel="stylesheet" href="/static/v1/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/v1/css/wap.css">
+    <style>
+        img{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        }
+        header{background-color:skyblue!important;}
+        .icon1{background:url('/static/v1/img/iconfont-tongxunlu.png')}
+        .clear{clear:both;}
+        .time{float:right;font-size:15px;color: grey;}
+        .small_font{font-size:13px;}
+    </style>
+
+</head>
+<body>
+
+
+<div class="mui-content" >
+    <ul class="mui-table-view" style="margin-top:0px;">
+        <li class="mui-table-view-cell">
+            <a href="/web/v1/code_share" class="mui-navigate-right small_font">
+                <font style="color:red;">点这里获得实时的资源对接消息推送</font>
+            </a>
+        </li>
+    </ul>
+    <br>
+
+    <div id="loading_div" style="text-align:center;">
+        <i class="fa fa-spinner fa-spin" style="color: orange;"></i>
+        <span style="color: orange;font-size:15px;">加载中</span>
+    </div>
+
+    <ul id="message_ul" style="display:none;" class="mui-table-view">
+
+        <li v-for="obj in objs" class="mui-table-view-cell mui-media">
+
+            <template v-if="obj.user.open_id != ''">
+                <a href="/web/v1/chat/{{obj.user.open_id}}#new_a">
+                    <img class="mui-media-object mui-pull-left" src="{{obj.user.avatar}}">
+
+                    <div class="mui-media-body">
+                        {{obj.user.name}}
+                        <div class="time">{{obj.create_time}}</div>
+                        <div class="clear"></div>
+                        <p class='mui-ellipsis'>
+                            {{obj.message_content}}
+                            <template v-if="obj.message_nums[0] != 0">
+                                <span class="mui-badge mui-badge-danger"
+                                      style="float:right;">{{obj.message_nums[0]}}</span>
+                                <span style="clear:both;"></span>
+                            </template>
+                        </p>
+                    </div>
+                </a>
+            </template>
+
+            <template v-else>
+                <a href="/web/v1/resource_html#new_a">
+                    <img class="mui-media-object mui-pull-left" src="{{obj.user.avatar}}">
+
+                    <div class="mui-media-body">
+                        {{obj.user.name}}
+                        <div class="time">{{obj.create_time}}</div>
+                        <div class="clear"></div>
+                        <p class='mui-ellipsis'>
+                            {{obj.message_content}}
+                            <template v-if="obj.message_nums[0] != 0">
+                                <span class="mui-badge mui-badge-danger"
+                                      style="float:right;">{{obj.message_nums[0]}}</span>
+                                <span style="clear:both;"></span>
+                            </template>
+                        </p>
+                    </div>
+                </a>
+            </template>
+
+
+        </li>
+
+    </ul>
+</div>
+<!-- tab -->
+<div style="width:100%;height:50px;"></div>
+<nav class="mui-bar mui-bar-tab">
+    <!--
+    <a class="mui-tab-item" id="becomeStudy"
+       href="/web/v1/main_card_list" style="border-right: 1px solid black;">
+        <span class="mui-tab-label">资源广场</span>
+    </a>
+    -->
+    <a class="mui-tab-item" href="/web/v1/contact_list" style="border-right: 1px solid black;">
+        <span class="mui-tab-label">我的资源库</span>
+    </a>
+    <a class="mui-tab-item mui-active" href="/web/v1/message">
+        <span class="mui-tab-label">我的消息</span>
+        <span id="message_tip_in_tab" class="wap_v1_redpoint"></span>
+    </a>
+</nav>
+
+
+<script src="/static/mui/js/mui.min.js"></script>
+<script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+<script src="/static/v1/js/loading.js"></script>
+<script src="/static/v1/js/wap.js?v=1"></script>
+<script>
+    mui.init()
+    mui('.mui-bar-tab').on('tap', 'a', function() {
+			document.location.href = this.href;
+		});
+
+	function get_chat_list(){
+        mui.ajax('/api/v1/get_own_message',{
+            dataType:'json',//服务器返回json格式数据
+            type:'get',//HTTP请求类型
+            timeout:10000,//超时时间设置为10秒；
+            cache: false,// 禁用缓存，防止返回消息显示问题
+            success:function(data){
+                var myDate = new Date();
+                day = myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate()
+                for(var i in data){
+                    var obj = data[i]
+                    var t = obj['create_time'].split(" ")
+                    if(day == t[0]){
+                        obj['create_time'] = t[0]
+                    }else{
+                        var tt = t[1].split(":")
+                        obj['create_time'] = tt[0] + ":" + tt[1]
+                    }
+                }
+
+                vm1.$set('objs', data)
+                document.getElementById('message_ul').style.display = 'block';
+	            document.getElementById('loading_div').style.display = 'none';
+            },
+            error:function(xhr,type,errorThrown){
+                if('abort' == type){
+                    // 用户终止的异常不处理
+                    return
+                }
+                mui.alert('服务器无法响应！')
+            }
+        });
+
+
+	}
+
+    var vm1 = new Vue({
+        el: '#message_ul',
+        data: {
+            objs: []
+        },
+        compiled: function(){
+            get_chat_list()
+        }
+    })
+// 获取未读消息
+get_not_read_message_number()
+
+</script>
+
+</body>
+</html>

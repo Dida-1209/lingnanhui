@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>岭南会名片社区管理系统</title>
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+    <style>
+        form, .list_div{padding:10px;}
+    </style>
+
+</head>
+<body>
+
+<!-- 导航条 -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0);"> 岭南会名片社区管理系统 </a>
+        </div>
+
+
+        <ul class="nav navbar-nav">
+            <li><a href="/admin/v1/cards">小编推荐管理</a></li>
+            <li><a href="/admin/v1/robot_set">微信群自动回复配置</a></li>
+            <li><a href="/admin/v1/group_link_setting">群链接管理</a></li>
+            <li class="active"><a href="resource_helper_message_ui">资源小助手</a></li>
+        </ul>
+    </div>
+
+</nav>
+
+<div style="padding:10px;">
+
+    <p><button type="button" class="btn btn-info" onclick="show_send_message_div();">群发消息</button></p>
+
+    <!-- 消息列表 -->
+        <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <td>
+                发送的用户
+            </td>
+            <td>
+                接收的用户
+            </td>
+            <td>
+                消息内容
+            </td>
+            <td>
+                操作
+            </td>
+        </tr>
+        </thead>
+        <tbody id="lists">
+            <tr v-for="obj in objs">
+
+                <td>
+                    <template v-if="obj.source_open_id == ''">
+                        资源小助手
+                    </template>
+                    <template v-else>{{obj.source_open_id}}</template>
+                </td>
+                <td>
+                    <template v-if="obj.target_open_id == ''">
+                        <template v-if="obj.send_or_receive == 0">
+                        全体成员
+                        </template>
+                        <template v-else>
+                        资源小助手
+                        </template>
+                    </template>
+                    <template v-else>{{obj.target_open_id}}</template>
+                </td>
+                <td>
+                    {{obj.message_content}}
+                </td>
+                <td>
+                    <a href="javascript:remove_message({{obj.id}});">删除信息</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="page"></div>
+
+</div>
+
+<div id="send_message_div" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">群发消息</h4>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="open_id">目标用户openid</label>
+            <input type="text" id="open_id" class="form-control" placeholder="默认发送给全体成员">
+          </div>
+          <div class="form-group">
+            <label for="message_content">消息内容</label>
+            <textArea rows="5" id="message_content" class="form-control" placeholder="请输入要发送的消息内容，支持html"></textArea>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="send_message();">群发</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+ <script src="/static/js/tools.js"></script>
+
+<script>
+    function show_send_message_div(){
+        $("#send_message_div").modal()
+    }
+    function send_message(){
+        var open_id = $("#open_id").val()
+        var message_content = $("#message_content").val()
+        if(!$.trim(message_content)){
+            alert('消息内容不能为空！')
+            return
+        }
+        $.post('/admin/v1/resource_helper_message_send', {
+            open_id: open_id,
+            message_content: message_content
+        }, function(data){
+            alert('发送消息成功！')
+            location.reload()
+        }).error(function(){
+            alert('服务器无法响应！')
+        })
+    }
+
+    function get_data_of_page(page){
+        $.get('/admin/v1/get_resource_helper_message_of_page/' + page + "/10", {
+
+        }, function(data){
+            vm.$set('objs', data['content']['objs'])
+
+            if(data['content']['total_page'] != 0){
+                var tmp = new TheWheelsOfFrontEnd();
+                html = tmp.getPagingComponent(5, data['content']['total_page'], page, "javascript:get_data_of_page(\{\{i\}\});", "javascript:get_data_of_page(1);", "javascript:get_data_of_page("+data['content']['total_page']+");");
+                $("#page").html(html)
+            }
+        }).error(function(){
+            alert('服务器异常！')
+        })
+    }
+
+    function remove_message(id){
+        $.get('/admin/v1/remove_message', {
+            "message_id": id
+        }, function(data){
+            alert('删除成功！')
+            location.reload()
+        }).error(function(){
+            alert('服务器异常！')
+        })
+    }
+
+    var vm;
+    $(document).ready(function(){
+        vm = new Vue({
+            el: '#lists',
+            data: {objs: []},
+            ready: function(){
+                get_data_of_page(1)
+            }
+        })
+    })
+
+</script>
+</body>
+</html>

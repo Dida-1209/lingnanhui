@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+
+  <title>我的资源库</title>
+  <link rel="stylesheet" href="/static/mui/css/mui.min.css" />
+  <link rel="stylesheet" type="text/css" href="/static/v1/css/demo.css?v=4&debug=1" />
+  <link rel="stylesheet" href="/static/v1/font-awesome/css/font-awesome.min.css" />
+  <link href="/static/v1/css/liststyle.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/static/v1/css/wap.css">
+     <style>
+    .card{
+        margin: 0px 20px 0px 20px;
+        }
+        .text_input{
+            width:70% !important;
+          }
+        .search_list_one span{
+                margin-top: 15px;
+                width: 100px;
+              padding-left:5px;
+              padding-right:5px;
+              display: inline-block;
+              text-align:center;
+          }
+</style>
+ </head>
+ <body>
+
+ <ul class="mui-table-view" style="margin-top:0px;">
+        <li class="mui-table-view-cell">
+            <a href="/web/v1/resource_html#new_a" class="mui-navigate-right small_font">
+                <font style="color:red;font-size:10px;">分享名片给好友可邀请好友资源进入自己的资源库，点这里拿名片</font>
+            </a>
+        </li>
+    </ul>
+
+  <div class="header">
+   <span>
+    <form method="get" id="searchform" action="">
+     <fieldset>
+      <input id="s" name="search_key" value="关键词" class="text_input" onblur="if(this.value==''){this.value='关键词';}" onfocus="if(this.value =='关键词') {this.value=''; }" type="text" />
+      <input id="submit" value="" type="submit" />
+     </fieldset>
+     <input name="industry" type="hidden" value="" />
+     <input name="role" type="hidden" value="" />
+    </form> </span>
+   <span>
+    <section class="job-module">
+     <dl class="retrie">
+      <dt>
+       <a id="area" href="javascript:show_or_hide_search_div();" class="">分类筛选 </a>
+      </dt>
+     </dl>
+    </section> </span>
+  </div>
+
+
+  <div class="mui-content">
+  <div id="list_" class="oneset" style="display:none;">
+   <div class="tou">
+    我
+   </div>
+   <a own-sign="link" style="display:block;" class="card" href="">
+    <div class="thumb">
+     <img own-sign="avatar" src="" />
+    </div>
+    <div class="information">
+     <span class="name" own-sign="name"></span>
+     <span class="info" own-sign="role"></span>
+     <span class="tag" own-sign="tag"> </span>
+    </div> </a>
+  </div>
+
+
+
+  <div id="content" class="oneset">
+   <div class="tou">
+    我
+   </div>
+      <div id="loading_div" style="text-align:center;">
+        <i class="fa fa-spinner fa-spin"></i>
+        <span style="color: orange;font-size:15px;">加载中</span>
+    </div>
+  </div>
+  <!-- 搜索框 -->
+  <div id="search_div" style="width: 100%;position: absolute;top: 100px;padding:10px;background-color:#eee;display:none;">
+   <p>选择行业标签</p>
+   <div own-d1="industry" class="search_list_one">
+    <span class="mui-badge mui-badge-primary">全部行业</span>
+    <span v-for="obj in objs" class="mui-badge mui-badge-inverted">{{obj.a}}</span>
+   </div>
+   <br />
+   <p>选择职能标签</p>
+   <div own-d2="zhineng" class="search_list_one" own-d1="全部行业">
+    <span class="mui-badge mui-badge-primary">全部类别</span>
+   </div>
+   <div own-d1="{{obj.a}}" own-d2="zhineng" v-for="obj in objs" class="search_list_one">
+    <span class="mui-badge mui-badge-primary">全部类别</span>
+    <span v-for="d in obj.b" class="mui-badge mui-badge-inverted">{{d}}</span>
+   </div>
+      <div style="width:100%;height:60px;"></div>
+  </div>
+</div>
+  <div style="width:100%;height:60px;"></div>
+  <!-- tab -->
+  	<nav class="mui-bar mui-bar-tab">
+        <!--
+		<a class="mui-tab-item" id="becomeStudy"
+			href="/web/v1/main_card_list" style="border-right: 1px solid black;">
+			<span class="mui-tab-label">资源广场</span>
+		</a>
+        -->
+		 <a class="mui-tab-item mui-active" href="/web/v1/contact_list" style="border-right: 1px solid black;">
+             <span class="mui-tab-label">我的资源库</span>
+		</a>
+        		 <a class="mui-tab-item" href="/web/v1/message">
+                     <span class="mui-tab-label">我的消息</span>
+                     <span id="message_tip_in_tab" class="wap_v1_redpoint"></span>
+		</a>
+	</nav>
+	
+	
+	<div id="mask" style="display: none;z-index: 3;">
+		<p style="font-size: 2rem;color: #fff;margin: 20% auto;width: 70%;height: 200px;line-height: 50px;">点这里获取你的名片，分享给好友，好友扫描后他的资源标签就会添加到你的标签。</p>
+		<i class="fa fa-level-down fa-4x" style="position: absolute;bottom: 50px;left: 70%;	-webkit-animation: arrow .5s infinite alternate;
+			animation: arrow .5s infinite alternate;"></i>
+		
+	</div>
+
+  <script src="/static/mui/js/mui.min.js"></script>
+  <script src="/static/v1/js/search_role.js"></script>
+  <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+  <script src="/static/v1/js/wap.js?v=1"></script>
+  <script src="/static/v1/js/contact_list.js?v=2"></script>
+ </body>
+</html>

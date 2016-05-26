@@ -1,0 +1,11 @@
+# 本文件说明缓存key前缀规范
+
+
+# 资源小助手信息读取记录记录
+key_prefix ----->  sign_resource_helper_{open_id}
+value ----->  时间str（年-月-日 时:分:秒）
+
+
+# 用户创建时间（该值绝对不变，同时该key用于检测名片是否存在）
+key_prefix ----->  data_user_create_time_{open_id}
+value ----->  时间str（年-月-日 时:分:秒）

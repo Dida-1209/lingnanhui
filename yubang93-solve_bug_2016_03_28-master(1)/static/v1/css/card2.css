@@ -1,0 +1,55 @@
+.info{
+	margin: 10% auto;
+	text-align: center;
+	width: 90%;
+	height: auto;
+	background-color: #fff;
+	border: 0.242vw solid #e4e4e4;
+	border-radius: 2.3vw;
+	-webkit-box-shadow: 0.668vw 0.668vw 0.668vw #ddd;
+    box-shadow: 0.668vw 0.668vw 0.668vw #ddd;
+}
+.code{
+	display: block;
+	margin: 3% auto;
+	width: 75vw;
+	height: 75vw;
+}
+.name{
+	font-size: 1.8rem;
+	color: #4E4E4E;
+	padding-bottom: 3.21vw;
+}
+.line{
+	border: 0.121vw solid #4e4e4e;
+	line-height: 0;
+	margin: 0 2.42vw;
+}
+.company,
+.job,
+.industry{
+	margin-bottom: 4.21vw;
+	font-size: 1rem;
+	color: #4e4e4e;
+}
+#marks{
+	padding: 3.21vw 0 10.21vw 10%;
+	overflow: hidden;
+}
+.tag{
+	float: left;
+	padding-right: 2.21vw;
+	font-size: 1rem;
+	color: #4e4e4e;
+}
+#marks .bigdata{
+	float: left;
+	padding-right: 5.21vw;
+	font-size: 1rem;
+	color: #4e4e4e;
+}
+.bigdata > img{
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}

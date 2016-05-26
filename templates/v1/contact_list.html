@@ -1,0 +1,91 @@
+{% extends "v1/base.html" %}
+{% block css %}
+<link href="/static/v1/css/liststyle.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block main %}
+<div id="list_" class="oneset" style="display:none;">
+    <div class="tou">我</div>
+    <a class="set1">
+        <div class="face-f"><img src="/static/v1/img/guo.jpg" class="face" /></div>
+        <div class="xx">
+            <div class="x1" ><b class="name">姓名</b> </div>
+            <div class="x2"><span class="job">公司</span></div>
+        </div>
+        <div style="clear: both;"></div>
+    </a>
+</div>
+
+<div id="content" class="oneset">
+    <div class="tou">我</div>
+
+</div>
+
+{% endblock %}
+{% block js %}
+
+<script>
+
+var html = "";
+var pin = "";
+
+function append_user(user_obj){
+
+    var dom_clone = document.getElementById('list_').cloneNode(true);
+    dom_clone.children[1].children[0].children[0].src = user_obj['avatar'];
+    dom_clone.children[1].children[1].children[0].children[0].innerHTML = user_obj['name'];
+    dom_clone.children[1].children[1].children[1].innerHTML = user_obj['company'] + dom_clone.children[1].children[1].children[1].innerHTML;
+    dom_clone.children[1].children[1].children[1].children[0].innerHTML = user_obj['industry'];
+    dom_clone.children[1].href = "javascript:goto_url('"+user_obj['open_id']+"');";
+
+    if(pin != user_obj['name_pinyin'].substr(0,1)){
+        pin = user_obj['name_pinyin'].substr(0,1);
+        var html_str = '</div><div id="content" class="oneset"><div class="tou">'+pin.toLocaleUpperCase()+'</div>';
+        html += html_str;
+    }
+
+    html += dom_clone.children[1].outerHTML;
+}
+
+function goto_url(open_id){
+    location.href = "/web/v1/contact/" + open_id;
+}
+
+function init(){
+
+    mui.ajax('/api/v1/getContacts',{
+        dataType:'json',//服务器返回json格式数据
+        type:'get',//HTTP请求类型
+        timeout:10000,//超时时间设置为10秒；
+        success:function(data){
+            for(var i in data['content']){
+                append_user(data['content'][i]);
+            }
+
+            document.getElementById('content').innerHTML += html;
+            mui.init();
+        },
+        error:function(xhr,type,errorThrown){
+            mui.alert("服务器异常，请刷新页面！");
+        }
+    });
+}
+
+mui.ajax('/api/v1/getNameCard',{
+        dataType:'json',//服务器返回json格式数据
+        type:'get',//HTTP请求类型
+        timeout:10000,//超时时间设置为10秒；
+        success:function(data){
+            if(data['code'] != 0){
+                location.href = '/web/v1/buildCard';
+            }else{
+                init();
+            }
+        },
+        error:function(xhr,type,errorThrown){
+            mui.alert("服务器异常，请刷新页面！");
+        }
+    });
+
+</script>
+
+{% endblock %}

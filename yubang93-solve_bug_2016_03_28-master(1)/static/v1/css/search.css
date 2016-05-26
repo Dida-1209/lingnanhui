@@ -1,0 +1,20 @@
+    .card{
+    margin: 0px 20px;
+    }
+    .text_input{
+        width:70% !important;
+      }
+    .search_list_one span{
+            margin-top: 15px;
+            width: 100px;
+          padding-left:5px;
+          padding-right:5px;
+          display: inline-block;
+          text-align:center;
+      }
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
+	.card{
+		width:91%;
+	}
+}

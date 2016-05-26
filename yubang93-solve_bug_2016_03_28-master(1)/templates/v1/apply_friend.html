@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+        <title>申请添加好友</title>
+        <style>
+            .rz {
+                font-size: 12px;
+                color: #CDCDCD;
+                margin-top: 5%;
+                margin-left: 23px;
+                width: 85%;
+                margin-right: auto;
+                margin-left: auto;
+            }
+            .mz {
+                margin-top: 15px;
+                height: 30px;
+                width: 85%;
+                margin-right: auto;
+                margin-left: auto;
+                padding-left: 10px;
+                border-bottom-width: 1.5px;
+                border-bottom-style: solid;
+                border-bottom-color: #60DBDB;
+            }
+            .mz .wenben {
+                outline: none;
+                border: 0;
+                width: 80%;
+                padding-bottom: 2px;
+                color: #000;
+                font-size: 14px;
+            }
+
+            .mz .ch {
+                float: right;
+                font-size: 18px;
+                padding-right: 10px;
+                color: #CDCDCD;
+            }
+
+            a{
+                    width: 80%;
+                    height: 2.5rem;
+                    color: white;
+                    font-size: 1.2rem;
+                    font-family: "黑体";
+                    background: #3bb4eb;
+                    left: 10%;
+                    margin-top: 1rem;
+                    border-radius: 0.5rem;
+                    display:block;
+                    line-height:2.5rem;
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <div class="mui-content">
+
+            <div class="rz">你需要发认证申请，等对方通过</div>
+            <div class="mz"><input id="remarks" name="username" type="text" class="wenben" placeholder="请输入备注信息">
+                <span class="ch" onclick="delete_content();">×</span>
+            </div>
+
+            <p align="center">
+                <a href="javascript:apply_friend();">申请资源对接</a>
+            </p>
+
+        </div>
+        <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+        <script src="/static/v1/js/wap.js"></script>
+        <script>
+            function delete_content(){
+                $("#username").val('')
+            }
+            function apply_friend(){
+
+                if(!$.trim($("#remarks").val())){
+                    alert('备注不能为空！')
+                    return;
+                }
+
+                $.ajax({
+                  type: 'POST',
+                  url: '/api/v1/apply_friend',
+                  data: {
+                    "remarks": $("#remarks").val(),
+                    "target_open_id": getParFromUrl('open_id')
+                  },
+                  success: function(data){
+                       if(data['r'] == 0){
+                          alert('你已经申请资源对接，请耐心等待对方确认！')
+                       }else{
+                          alert('申请资源对接成功，请耐心等待对方确认！')
+                       }
+                       location.href = '/web/v1/contact_list'
+                  },
+                  error: function(){
+                    alert('服务器无法响应！')
+                  }
+                })
+            }
+        </script>
+    </body>
+</html>

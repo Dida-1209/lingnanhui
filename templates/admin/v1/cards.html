@@ -1,0 +1,137 @@
+{% extends "admin/v1/base.html" %}
+{% block main %}
+
+<!-- 导航条 -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0);"> 岭南会名片社区管理系统 </a>
+        </div>
+    </div>
+</nav>
+
+<form class="form-inline">
+    <div class="form-group">
+        <select id="status" class="form-control" onchange="getMessage(0);">
+            <option value="0">全部</option>
+            <option value="1">最新</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" id="search_nickname" class="form-control" placeholder="请输入昵称">
+    </div>
+    <button onclick="getMessage(1);" type="button" class="btn btn-info">搜索</button>
+</form>
+
+<!-- 名片列表 -->
+<div class="list_div">
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>名字</th>
+            <th>公司</th>
+            <th>行业职位</th>
+            <th>推荐到小编推荐</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="content_table">
+
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+
+<div style="display:none;">
+    <table>
+        <tbody id="t">
+        <tr>
+            <td>名字</td>
+            <td>公司</td>
+            <td>行业职位</td>
+            <td>推荐到小编推荐</td>
+            <td>
+                <a href="">推荐到小编推荐</a>
+                <a href="">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/js/tools.js"></script>
+<script>
+
+    function getMessage(page){
+        $("#content_table").html("");
+        $.post("/admin/v1/get_cards", {
+            "page": page,
+            "status": $("#status").val(),
+            "search_nickname": $("#search_nickname").val()
+        }, function(data){
+
+            for(var i in data['objs']){
+                var clone_dom = document.getElementById('t').cloneNode(true);
+                clone_dom = clone_dom.children[0];
+
+                clone_dom.children[0].innerHTML = data['objs'][i]['name'];
+                clone_dom.children[1].innerHTML = data['objs'][i]['company'];
+                clone_dom.children[2].innerHTML = data['objs'][i]['industry'];
+
+                if(data['objs'][i]['is_recommend'] == 0){
+                    clone_dom.children[3].innerHTML = "否";
+                    clone_dom.children[4].children[0].href = "javascript:recommend_card(" + data['objs'][i]['id'] + ", 1);";
+                    clone_dom.children[4].children[0].innerHTML = "推荐到小编推荐";
+                }else{
+                    clone_dom.children[3].innerHTML = "是";
+                    clone_dom.children[4].children[0].href = "javascript:recommend_card(" + data['objs'][i]['id'] + ", 0);";
+                    clone_dom.children[4].children[0].innerHTML = "取消推荐到小编推荐";
+                }
+
+                clone_dom.children[4].children[1].href = "javascript:deleteMessage(" + data['objs'][i]['id'] + ");";
+                $("#content_table").append(clone_dom);
+
+                var tmp = new TheWheelsOfFrontEnd();
+                html = tmp.getPagingComponent(5, data['max_page'], data['page'], "javascript:getMessage(\{\{i\}\});", "javascript:getMessage(1);", "javascript:getMessage("+data['max_page']+");");
+                $("#page").html(html);
+            }
+
+        }).error(function(){
+            alert("服务器发生不可预料的错误，请与开发人员联系！");
+        });
+
+    }
+
+    function deleteMessage(id){
+        $.get('/admin/v1/delete_card/'+id, {}, function(){
+            alert("删除成功！");
+            location.reload();
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+    }
+
+    function recommend_card(id, status){
+        $.get('/admin/v1/recommend_card/' + id + "/" + status, {}, function(data){
+            alert("处理成功！");
+            location.reload();
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+    }
+
+    $(document).ready(function(){
+        getMessage(1);
+    });
+
+
+</script>
+
+{% endblock %}
+
+{% block css %}
+<style>
+    form, .list_div{padding:10px;}
+</style>
+{% endblock %}

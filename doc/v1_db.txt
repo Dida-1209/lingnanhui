@@ -1,0 +1,45 @@
+# 名片表
+create table if not exists card_business_card(
+    id int(11) auto_increment,
+    open_id varchar(100) not null comment '微信openid',
+    name varchar(20) not null comment '姓名',
+    company varchar(100) not null comment '公司',
+    industry varchar(20) not null comment '所在行业',
+    resources varchar(255) not null comment '能提供的资源',
+    resources_label varchar(100) not null comment '资源类型标签',
+    resources_key varchar(100) not null comment '资源类型关键字',
+    avatar varchar(255) not null comment '头像地址',
+    is_recommend int(1) not null default 0 comment '是否小编推荐，0为否，1为是',
+    status int(1) not null default 0 comment '状态，0为启用，1为禁用，2为删除',
+    name_pinyin varchar(50) not null comment '名字拼音',
+    create_time datetime not null comment '创建时间',
+    update_time timestamp not null comment '修改时间',
+    primary key(id)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='个人名片表';
+
+
+# 用户好友表
+create table if not exists card_friends(
+    id int(11) auto_increment,
+    source_open_id varchar(100) not null comment '源用户微信openid',
+    target_open_id varchar(100) not null comment '目标用户微信openid',
+    status int(1) not null comment '状态，0为好友关系',
+    create_time datetime not null comment '创建时间',
+    update_time timestamp not null comment '修改时间',
+    primary key(id)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='好友关系表';
+
+
+# 聊天数据表
+create table if not exists card_chats(
+    id int(11) auto_increment,
+    from_open_id varchar(100) not null comment '发送方openid',
+    to_open_id varchar(100) not null comment '接收方openid',
+    message_content varchar(255) not null comment '消息内容',
+    message_type int(1) not null comment '消息类型，0为文字',
+    status int(1) not null comment '状态，0为未查看，1为已查看',
+    create_time datetime not null comment '发送时间',
+    uptime_time timestamp not null comment '修改时间',
+    primary key(id)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='聊天数据表';
+

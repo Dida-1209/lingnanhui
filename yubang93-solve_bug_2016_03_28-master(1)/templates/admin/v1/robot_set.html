@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>岭南会名片社区管理系统</title>
+		<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css">
+
+        <style>
+            form, .list_div{padding:10px;}
+        </style>
+
+    </head>
+    <body>
+
+
+<!-- 导航条 -->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0);"> 岭南会名片社区管理系统 </a>
+        </div>
+
+
+     <ul class="nav navbar-nav">
+        <li><a href="/admin/v1/cards">小编推荐管理</a></li>
+        <li class="active"><a href="/admin/v1/robot_set">微信群自动回复配置</a></li>
+        <li><a href="/admin/v1/group_link_setting">群链接管理</a></li>
+        <li><a href="resource_helper_message_ui">资源小助手</a></li>
+     </ul>
+    </div>
+
+</nav>
+
+<div style="padding:10px;">
+
+    <p>
+        <button type="button" class="btn btn-primary" onclick="show_add_div();">添加回复</button>
+    </p>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <td>
+                序号
+            </td>
+            <td>
+                触发关键字
+            </td>
+            <td>
+                需要回复的微信群
+            </td>
+            <td>
+                需要回复的内容
+            </td>
+            <td>
+                状态
+            </td>
+            <td>
+                操作
+            </td>
+        </tr>
+        </thead>
+        <tbody id="list_tbody">
+
+            <tr v-for="obj in objs">
+                <td>
+                    {{ $index + 1 }}
+                </td>
+                <td>
+                    {{ obj.reply_key }}
+                </td>
+                <td>
+                    {{ obj.wechat_group_name }}
+                </td>
+                <td>
+                    {{ obj.reply_content }}
+                </td>
+                <td>
+                    <b v-if="obj.status == 0">启用</b>
+                    <b v-else>禁用</b>
+                </td>
+                <td>
+                    <a href="javascript:edit_reply({{ $index }});">编辑</a>
+                    <a href="javascript:delete_reply({{ obj.id }});">删除</a>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <div id="model" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加自动回复</h4>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label for="wechat_group_name">微信群名称</label>
+            <input type="text" class="form-control" id="wechat_group_name" placeholder="微信群">
+          </div>
+          <div class="form-group">
+            <label for="reply_key">触发关键字</label>
+            <input type="text" class="form-control" id="reply_key" placeholder="触发关键字">
+          </div>
+          <div class="form-group">
+            <label for="reply_content">自动回复内容</label>
+              <textarea id="reply_content" class="form-control" placeholder="自动回复内容"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="status">是否启用</label>
+            <select id="status" class="form-control">
+                <option value="0">启用</option>
+                <option value="1">禁用</option>
+            </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="add_reply();">添加</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</div>
+
+    <div id="model2" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">编辑自动回复</h4>
+      </div>
+      <div class="modal-body">
+            <input type="hidden" v-model="reply_id">
+          <div class="form-group">
+            <label for="wechat_group_name2">微信群名称</label>
+            <input v-model="wechat_group_name" type="text" class="form-control" id="wechat_group_name2" placeholder="微信群">
+          </div>
+          <div class="form-group">
+            <label for="reply_key2">触发关键字</label>
+            <input v-model="reply_key" type="text" class="form-control" id="reply_key2" placeholder="触发关键字">
+          </div>
+          <div class="form-group">
+            <label for="reply_content2">自动回复内容</label>
+              <textarea v-model="reply_content" id="reply_content2" class="form-control" placeholder="自动回复内容"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="status2">是否启用</label>
+            <select v-model="status" id="status2" class="form-control">
+                <option value="0">启用</option>
+                <option value="1">禁用</option>
+            </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="update_reply();">修改</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+        <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+<script>
+
+    var objs = null;
+    var vm1;
+    $(document).ready(function(){
+
+        vm1 = new Vue({
+            el: "#model2",
+            data:{
+                wechat_group_name: '',
+                reply_content: '',
+                status: 0,
+                reply_id: 0
+            }
+        });
+
+        $.get('/admin/v1/get_all_replys', {}, function(data){
+            objs = data;
+            new Vue({
+                el: '#list_tbody',
+                data: {
+                    "objs": data
+                }
+            });
+
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+
+    });
+
+    function show_add_div(){
+        $("#model").modal("show");
+    }
+
+    function add_reply(){
+        var wechat_group_name = $("#wechat_group_name").val();
+        var reply_content = $("#reply_content").val();
+        var status = $("#status").val();
+        $.post("/admin/v1/add_reply", {
+            "wechat_group_name": wechat_group_name,
+            "reply_content": reply_content,
+            "status": status,
+            "reply_key": $("#reply_key").val()
+        }, function(data){
+            alert("添加成功！");
+            location.reload();
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+    }
+
+    function delete_reply(id){
+        $.get('/admin/v1/delete_reply', {"id": id}, function(data){
+            alert("删除成功！");
+            location.reload();
+        }).error(function(){
+            alert("服务器无法响应！");
+        });
+    }
+
+    function edit_reply(i){
+        vm1.$set('wechat_group_name', objs[i]['wechat_group_name']);
+        vm1.$set('status', objs[i]['status'])
+        vm1.$set('reply_content', objs[i]['reply_content'])
+        vm1.$set('reply_id', objs[i]['id'])
+        vm1.$set('reply_key', objs[i]['reply_key'])
+        $("#model2").modal();
+    }
+
+    function update_reply(){
+        $.post("/admin/v1/update_reply", {
+            "wechat_group_name": vm1.wechat_group_name,
+            "status": vm1.status,
+            "reply_content": vm1.reply_content,
+            "id": vm1.reply_id,
+            "reply_key": vm1.reply_key
+        }, function(data){
+            alert("修改成功！")
+            location.reload()
+        }).error(function(){
+            alert("服务器无法响应！")
+        });
+    }
+
+</script>
+    </body>
+</html>

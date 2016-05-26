@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+  <title></title>
+     <link rel="stylesheet" href="/static/v1/font-awesome/css/font-awesome.min.css"/>
+
+  <link rel="stylesheet" href="/static/mui/css/mui.min.css" />
+  <link href="/static/v1/css/cardstyle.css?v=3&debug=8" rel="stylesheet" type="text/css" />
+
+     <style>
+    .bigdata > img {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+    }
+    .h{
+        width:30%;
+     }
+     .bigdata{
+        display: inline-block;
+     }
+    </style>
+ </head>
+ <body>
+
+ <div id="loading_div" style="text-align:center;margin-top:10px;">
+        <i class="fa fa-spinner fa-spin" style="color: orange;"></i>
+        <span style="color: orange;font-size:15px;">加载中</span>
+    </div>
+
+  <div id="mui-content" class="mui-content" style="display:none;">
+
+
+      <div class="card">
+    <div class="face-f">
+     <img class="face" src="{{card.avatar}}" />
+    </div>
+    <div class="xx">
+     <div class="name">
+      {{card.name}}
+     </div>
+     <div class="tag">
+      {{card.company}}
+      <span class="job">{{card.role}}</span>
+     </div>
+    </div>
+    <div v-if="card.is_me == 0" style="float:right;padding-right:15px;padding-top:12px;">
+        <a href="/web/v1/updateCard" class="mui-btn mui-btn-primary mui-btn-outlined">编辑</a>
+    </div>
+    <div style="clear: both;"></div>
+    <hr size="1" color="#e9ebe8" />
+    <div class="text2">
+     <span class="h">所属行业</span>{{card.industry}}
+    </div>
+    <hr size="1" color="#e9ebe8" />
+    <div class="text3">
+     <span class="h" style="width:30%;">标 签</span>
+     <span style="display: block;width: 65%;float: right;margin-right: 5%;">
+         <span v-for="obj in card.keys" class="bigdata"><img src="/static/v1/images/2.png" />{{obj}}</span>
+     </span>
+     <div style="clear:both;"></div>
+    </div>
+    <hr size="1" color="#e9ebe8" />
+   </div>
+
+   <button v-if="card.is_friend == 0" onclick="goto_chat();">发消息</button>
+   <button v-else onclick="add_friend('{{card.open_id}}');">申请资源对接</button>
+
+  </div>
+  <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+
+ <script src="/static/mui/js/mui.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/vue/1.0.8/vue.min.js"></script>
+ <script src="/static/v1/js/wap.js?v=2&debug=1"></script>
+ <script src="/static/v1/js/people.js?v=2&debug=1"></script>
+ </body>
+</html>

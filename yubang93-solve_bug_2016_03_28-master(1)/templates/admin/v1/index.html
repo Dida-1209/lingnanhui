@@ -1,0 +1,29 @@
+{% extends "admin/v1/base.html" %}
+{% block main %}
+<!-- 导航条 -->
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="javascript:void(0);"> 岭南会名片社区管理系统 </a>
+		</div>
+	</div>
+</nav>
+
+<!-- 登录框 -->
+<form action="/admin/v1/login" method="post">
+  <div class="form-group">
+    <label for="username">用户名</label>
+    <input type="text" class="form-control" id="username"  name="username" placeholder="请输入用户名" required>
+  </div>
+  <div class="form-group">
+    <label for="password">密码</label>
+    <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" required>
+  </div>
+  <button type="submit" class="btn btn-success">登录</button>
+  </form>
+{% endblock %}
+{% block css %}
+<style>
+	form{margin-left:30%;width:40%;margin-top:50px;}
+</style>
+{% endblock %}

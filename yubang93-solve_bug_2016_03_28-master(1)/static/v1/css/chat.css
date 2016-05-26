@@ -1,0 +1,161 @@
+* {
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+.container {
+	z-index: -1;
+	padding: 3%;
+	background-color: #EBEBEB;
+	overflow: hidden;
+}
+
+
+/*聊天框*/
+
+.client,
+.houtai {
+	padding-top: 2%;
+	overflow: hidden;
+}
+
+.talk,
+.answer {
+	word-break:break-word;
+	display: inline-block;
+	background: #b1e374;
+	border-radius: 10%;
+	box-shadow: 0 0 2px #739a49;
+	margin-right: 5%;
+	max-width: 70%;
+	min-height: 13%;
+	padding: 3%;
+	float: right;
+}
+
+.talk:after {
+	content: '';
+	position: absolute;
+	right: 15%;
+	height: 0;
+	width: 0;
+	border: 12px solid transparent;
+	border-left: 12px solid #b1e374;
+}
+
+.answer:before {
+	content: '';
+	position: absolute;
+	left: 15%;
+	height: 0;
+	width: 0;
+	border: 12px solid transparent;
+	border-right: 12px solid #b1e374;
+}
+
+.touxiang,
+.guanliyuan {
+	display: block;
+	width: 13%;
+	height: 13%;
+	float: right;
+}
+
+.answer {
+	margin-left: 5%;
+	margin-right: 0;
+}
+
+.guanliyuan,
+.answer {
+	float: left;
+}
+
+
+/*底部*/
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	background: #fff;
+	border-top: 2px solid #e1e1e1;
+	height: 40px;
+	width: 100%;
+	overflow: hidden;
+}
+
+#input-field {
+	display: inline-block;
+	border-bottom: 2px solid #bdf7ad;
+	width: 70%;
+	height: 68%;
+	padding: 1%;
+	float: left;
+	overflow: hidden;
+	margin-left: 5%;
+}
+
+#input-field > p {
+	display: inline-block;
+	width: 85%;
+	height: 100%;
+	font-size: 30px;
+	float: left;
+}
+
+#bianhua,
+#xiaoxi,
+#biaoqing,
+#jia {
+	width: 15%;
+	height: 100%;
+	display: inline-block;
+	float: left;
+}
+
+#bianhua {
+	border-right: 1px solid #ebebeb;
+	background: url(../images/bianhua.png) no-repeat center center;
+	background-size: 80% 80%;
+}
+
+#xiaoxi {
+	background: url(../images/xiaoxi.png) no-repeat center center;
+	background-size: 68% 68%;
+}
+
+#biaoqing {
+	background: url(../images/biaoqing.png) no-repeat center center;
+	background-size: 80% 70%;
+}
+
+#jia {
+	line-height: 30px;
+    display: block;
+    margin-left: 5%;
+    height: 70%;
+    margin-top: 7px;
+    text-align: center;
+    border: 1px solid #bdf7ad;
+    color: #bdf7ad;
+}
+
+.input_font{
+	height:100%;
+	width:100%;
+}
+
+body{
+	background-color:#EBEBEB;
+}
+
+.tab_div{
+	width:100%;
+	height:40px;
+}

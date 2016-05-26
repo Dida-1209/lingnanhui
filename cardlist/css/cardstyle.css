@@ -1,0 +1,67 @@
+body{
+	background: #ecf2f2;
+}
+#card{
+	width: 88%;
+	margin-left: 6%;
+	margin-top: 2rem;
+	box-shadow: 0.15rem 0.15rem 0.07rem #b7bbba;
+	background: white;
+}
+#face-f{
+	margin: 0.5rem 1rem 0.5rem 1rem; 
+	width: 4rem;
+	height: 4rem;
+	border-radius: 5rem;
+	float: left;
+	overflow: hidden;
+	display: -webkit-box;
+}
+#face{
+	width: 100%;
+	height: auto;	
+}
+#xx{
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	height: 4rem;
+	float: left;
+	color: #535552;
+	font-family: "黑体";
+}
+#name{
+	margin-top: 0.5rem;
+	font-size: 1.3rem;
+}
+#tag{
+	font-size: 0.9rem;
+	float: left;
+}
+#job{
+	border-left: 0.14rem solid;
+	margin-left: 0.5rem;
+	padding-left: 0.5rem;
+}
+.text{
+	font-size: 0.9rem;
+	line-height: 1rem;
+	color: #535552;
+	font-family: "黑体";
+}
+span.h{
+	display: inline-block;
+	width:6rem;
+	text-align: center;
+}
+
+button{
+	width: 80%;
+	height: 2.5rem;
+	color: white;
+	font-size: 1.2rem;
+	font-family: "黑体";
+	background: #3bb4eb;
+	left: 10%;
+	margin-top: 1rem;
+	border-radius: 0.5rem;
+}

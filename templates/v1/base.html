@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="/static/mui/css/mui.min.css">
+        {% block css %}{% endblock %}
+    </head>
+    <body>
+        <div class="mui-content">{% block main %}{% endblock %}</div>
+        <script src="/static/mui/js/mui.min.js"></script>
+        {% block js %}{% endblock %}
+    </body>
+</html>
